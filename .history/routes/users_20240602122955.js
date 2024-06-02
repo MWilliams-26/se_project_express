@@ -1,6 +1,9 @@
+const { get } = require('../models/user');
+
 const router = require('express').Router();
 
-router.get('/', getUsers);
+
+router.get('/', get;
 router.get('/:userId', () => console.log("GET users by ID"));
 router.post('/', () => console.log("POST users"));
 
