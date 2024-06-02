@@ -16,9 +16,8 @@ const userSchema = new mongoose.Schema({
       validator(value) {
         return validator.isURL(value);
       },
-      message: "You must enter a valid URL",
-    },
-  },
-});
+      mess
+    }
+  }
 
 module.exports = ("user", userSchema);

@@ -11,9 +11,7 @@ mongoose
     console.log("Connected to DB");
   })
   .catch(console.error);
-
-
-app.use("/", mainRouter)
+  app.use("/", mainRouter)
 
 
 
