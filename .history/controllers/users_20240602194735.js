@@ -7,7 +7,7 @@ const getUsers = (req, res) => {
     .then((users) => res.send(users))
     .catch((err) => {
       console.error(err);
-    });
+    })
 };
 
 module.exports = { getUsers };
