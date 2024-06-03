@@ -12,7 +12,7 @@ mongoose
   })
   .catch(console.error);
 
-  app.use("/", mainRouter)
+app.use("/", mainRouter)
 
 
 
