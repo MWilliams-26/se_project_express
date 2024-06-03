@@ -9,5 +9,3 @@ const getUsers = (req, res) => {
       console.error(err);
     });
 };
-
-module.exports = { getUsers };

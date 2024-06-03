@@ -10,4 +10,5 @@ const getUsers = (req, res) => {
     });
 };
 
-module.exports = { getUsers };
+module.exports = {getUsers,
+};

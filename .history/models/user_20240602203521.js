@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    minlength: 2,
+    minLength: 2,
     maxlength: 30,
   },
 
@@ -17,8 +17,7 @@ const userSchema = new mongoose.Schema({
         return validator.isURL(value);
       },
       message: 'You must enter a valid URL',
-    },
-  }
-});
+    }
+  });
 
 module.exports = ("user", userSchema);
