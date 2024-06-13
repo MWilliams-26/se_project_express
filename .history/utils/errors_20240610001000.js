@@ -1,3 +1,0 @@
-const BAD_REQUEST_ERROR = 400;
-
-EXP
