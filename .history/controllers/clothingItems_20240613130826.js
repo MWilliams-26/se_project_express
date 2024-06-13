@@ -27,7 +27,7 @@ const getItems = (req, res) => {
     .then((items) => res.status(200)
       .send(items))
     .catch((err) => {
-      res.status(INTERNAL_SERVER_ERROR).send({ message:  "An error has occurred on the server." })
+      res.status(INTERNAL_SERVER_ERROR).send({ message: err.message })
     })
 };
 
@@ -45,7 +45,7 @@ const deleteItem = (req, res) => {
       if (err.name === 'DocumentNotFoundError') {
         return res.status(NOT_FOUND_ERROR).send({ message: "That does not live here!" });
       }
-      return res.status(INTERNAL_SERVER_ERROR).send({ message:  "An error has occurred on the server" })
+      return res.status(INTERNAL_SERVER_ERROR).send({ message: err.message })
     })
 }
 
@@ -65,7 +65,7 @@ const likeItem = (req, res) => {
       if (err.name === 'DocumentNotFoundError') {
         return res.status(NOT_FOUND_ERROR).send({ message: "That does not live here!" });
       }
-      return res.status(INTERNAL_SERVER_ERROR).send({ message:  "An error has occurred on the server" });
+      return res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
     })
 }
 
@@ -85,9 +85,9 @@ const unlikeItem = (req, res) => {
       if (err.name === 'DocumentNotFoundError') {
         return res.status(NOT_FOUND_ERROR).send({ message: "That does not live here!" });
       }
-      return res.status(INTERNAL_SERVER_ERROR).send({ message:  "An error has occurred on the server" });
+      return res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
     })
 }
 
 
-module.exports = { createItem, getItems, deleteItem, likeItem, unlikeItem };
+module.exports = { createItem, getItems, updateItem, deleteItem, likeItem, unlikeItem };
