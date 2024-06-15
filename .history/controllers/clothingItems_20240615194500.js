@@ -27,8 +27,8 @@ const getItems = (req, res) => {
     .then((items) => res.status(200)
       .send(items))
     .catch((err) => {
-      console.error(err);
-      return res.status(INTERNAL_SERVER_ERROR).send({ message:  "An error has occurred on the server." })
+      
+      res.status(INTERNAL_SERVER_ERROR).send({ message:  "An error has occurred on the server." })
     })
 };
 
