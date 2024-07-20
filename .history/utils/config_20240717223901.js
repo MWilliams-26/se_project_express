@@ -1,0 +1,1 @@
+const JWT_SECRET = 'super-strong-secret';
