@@ -1,5 +1,5 @@
 const ClothingItem = require('../models/clothingItem');
-const { BAD_REQUEST_ERROR, INTERNAL_SERVER_ERROR, NOT_FOUND_ERROR, FORBIDDEN_ERROR, REQUEST_SUCCESS } = require('../utils/errors');
+const { BAD_REQUEST_ERROR, INTERNAL_SERVER_ERROR, NOT_FOUND_ERROR, FORBIDDEN_ERROR,  } = require('../utils/errors');
 
 // GET /clothingItems
 
@@ -43,7 +43,7 @@ const deleteItem = (req, res) => {
         return res.status(FORBIDDEN_ERROR).send({ message: "You can't delete this item" });
       }
       return item.deleteOne()
-      .then(() => res.status(REQUEST_SUCCESS).send({ data: item }));
+      .then(() => res.status(Request_Success).send({ data: item }));
     })
     .catch ((err) => {
   console.error(err);
