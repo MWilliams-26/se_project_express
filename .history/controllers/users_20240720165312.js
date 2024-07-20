@@ -20,16 +20,8 @@ const createUser = (req, res) => {
       .send({ message: "Email is required." });
   }
 
-  User.findOne({ email })
-    .then((user) => {
-      if (user) {
-        const error = new Error("Email already exists");
-        error.statusCode = CONFLICT_ERROR;
-        throw error;
-      }
-
-      return bcrypt.hash(password, 10);
-    })
+  return bcrypt
+    .hash(password, 10)
     .then((hash) =>
       User.create({
         name,
@@ -39,10 +31,10 @@ const createUser = (req, res) => {
       })
     )
     .then((user) => res.status(REQUEST_SUCCESS).send({ name, avatar, email }),
-    )
-    .catch((err) => {
+  )
+  .catch((err) => {
       console.error(err);
-      if (err.statusCode === CONFLICT_ERROR) {
+      if (err.code === 11000) {
         return res
           .status(CONFLICT_ERROR)
           .send({ message: "Email already exists" });
@@ -56,8 +48,8 @@ const createUser = (req, res) => {
         .status(INTERNAL_SERVER_ERROR)
         .send({ message: "An error has occurred on the server." });
     });
+});
 };
-
 
 const getCurrentUser = (req, res) => {
   User.findById(req.user._id)

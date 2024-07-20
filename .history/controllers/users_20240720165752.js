@@ -21,15 +21,14 @@ const createUser = (req, res) => {
   }
 
   User.findOne({ email })
-    .then((user) => {
+  .then((user) => {
       if (user) {
         const error = new Error("Email already exists");
         error.statusCode = CONFLICT_ERROR;
-        throw error;
-      }
+        throw error; 
 
-      return bcrypt.hash(password, 10);
-    })
+  return bcrypt
+    .hash(password, 10)
     .then((hash) =>
       User.create({
         name,
@@ -42,7 +41,7 @@ const createUser = (req, res) => {
     )
     .catch((err) => {
       console.error(err);
-      if (err.statusCode === CONFLICT_ERROR) {
+      if (err.code === 11000) {
         return res
           .status(CONFLICT_ERROR)
           .send({ message: "Email already exists" });
