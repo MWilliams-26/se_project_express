@@ -11,50 +11,41 @@ const {
   CONFLICT_ERROR
 } = require('../utils/errors');
 
-const createUser = (req, res) => {
-  const { name, avatar, email, password } = req.body;
+// const createUser = (req, res) => {
+//   const { name, avatar, email, password } = req.body;
+//   console.log(req.body);
 
-  if (!email) {
-    return res
-      .status(BAD_REQUEST_ERROR)
-      .send({ message: "Email is required." });
-  }
+//   if (!email) {
+//     return res.status(BAD_REQUEST_ERROR).send({ message: "Email is required" });
+//   }
 
-  return User.findOne({ email }).then((existingUser) => {
-    if (existingUser) {
-      return res
-        .status(CONFLICT_ERROR)
-        .send({ message: "User already exists" });
-    }
-    return bcrypt
-      .hash(password, 10)
-      .then((hashedPassword) =>
-        User.create({
-          name,
-          avatar,
-          email,
-          password: hashedPassword,
-        })
-      )
-      .then(() => res.status(REQUEST_SUCCESS).send({ name, avatar, email }))
-      .catch((err) => {
-        console.error(err);
-        if (err.code === 11000) {
-          return res
-            .status(CONFLICT_ERROR)
-            .send({ message: "Email already exists" });
-        }
-        if (err.name === "ValidationError") {
-          return res
-            .status(BAD_REQUEST_ERROR)
-            .send({ message: "Invalid data" });
-        }
-        return res
-          .status(INTERNAL_SERVER_ERROR)
-          .send({ message: "An error has occurred on the server." });
-      });
-  });
-};
+//   return User.findOne({ email }).then((existingUser) => {
+//     if (existingUser) {
+//       return res.status(CONFLICT_ERROR).send({ message: "Email already exists" });
+//     }
+//   })
+
+//   return bcrypt
+//     .hash(password, 10)
+//     .then((hash) =>
+//       User.create({ name, avatar, email, password: hash, }))
+//     .then((user) => {
+//       const userInfo = user.toObject();
+//       delete userInfo.password;
+//       res.status(REQUEST_SUCCESS).send(userInfo);
+//     })
+//     .catch((err) => {
+//       console.error(err);
+//       if (err.name === "ValidationError") {
+//         return res.status(BAD_REQUEST_ERROR).send({ message: "Invalid data" });
+//       }
+//       if (err.code === 11000) {
+//         return res.status(CONFLICT_ERROR).send({ message: "Email already exists" });
+//       }
+//       return res.status(INTERNAL_SERVER_ERROR).send({ message: "An error has occurred on the server." });
+//     });
+// };
+
 
 const getCurrentUser = (req, res) => {
   User.findById(req.user._id)
