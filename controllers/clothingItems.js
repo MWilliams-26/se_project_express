@@ -24,10 +24,11 @@ const createItem = (req, res) => {
 
 const getItems = (req, res) => {
   ClothingItem.find({})
-    .then((items) => res.status(200)
+    .then((items) => res
       .send(items))
     .catch((err) => {
-      res.status(INTERNAL_SERVER_ERROR).send({ message:  "An error has occurred on the server." })
+      console.error(err);
+      return res.status(INTERNAL_SERVER_ERROR).send({ message:  "An error has occurred on the server." })
     })
 };
 
@@ -36,7 +37,7 @@ const deleteItem = (req, res) => {
   console.log(itemId);
   ClothingItem.findByIdAndDelete(itemId)
     .orFail()
-    .then((item) => res.status(200).send({ data: item }))
+    .then((item) => res.send({ data: item }))
     .catch((err) => {
       console.error(err);
       if (err.name === 'CastError') {
@@ -56,7 +57,7 @@ const likeItem = (req, res) => {
   ClothingItem.findByIdAndUpdate(itemId, { $addToSet: { likes: userId } }, { new: true },
   )
     .orFail()
-    .then((item) => res.status(200).send({ data: item }))
+    .then((item) => res.send({ data: item }))
     .catch((err) => {
       console.error(err);
       if (err.name === 'CastError') {
@@ -76,7 +77,7 @@ const unlikeItem = (req, res) => {
   ClothingItem.findByIdAndUpdate(itemId, { $pull: { likes: userId } }, { new: true },
   )
     .orFail()
-    .then((item) => res.status(200).send({ data: item }))
+    .then((item) => res.send({ data: item }))
     .catch((err) => {
       console.error(err);
       if (err.name === 'CastError') {
