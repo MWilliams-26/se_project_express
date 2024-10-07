@@ -4,29 +4,25 @@ const { BAD_REQUEST_ERROR, INTERNAL_SERVER_ERROR, NOT_FOUND_ERROR, FORBIDDEN_ERR
 // GET /clothingItems
 
 const createItem = (req, res) => {
-  console.log(req)
-  console.log(req.body)
-
   const { name, weather, imageUrl } = req.body;
-  const owner = req.user._id;
-  console.log(owner);
 
-  ClothingItem.create({ name, weather, imageUrl, owner }).then((item) => {
-    console.log(item);
-    res.status(REQUEST_SUCCESS).send({ data: item })
-  }).catch((err) => {
-    console.error(err);
-    if (err.name === 'ValidationError') {
-      return res.status(BAD_REQUEST_ERROR).send({ message: "Invalid data" });
-    }
-    return res.status(INTERNAL_SERVER_ERROR).send({ message: "An error has occurred on the server" });
-  });
+  ClothingItem.create({ name, weather, imageUrl, owner: req.user._id })
+    .then((item) => {
+      console.log(item);
+      res.send({ data: item });
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return res.status(BAD_REQUEST_ERROR).send({ message: "Wrong data fool!" });
+      } else {
+        res.status(INTERNAL_SERVER_ERROR).send({ message: "An error has occurred on the server." })
+      }
+    });
 };
 
 const getItems = (req, res) => {
   ClothingItem.find({})
-    .then((items) => res
-      .send(items))
+    .then((items) => res.send(items))
     .catch((err) => {
       console.error(err);
       return res.status(INTERNAL_SERVER_ERROR).send({ message: "An error has occurred on the server." })
@@ -35,38 +31,54 @@ const getItems = (req, res) => {
 
 const deleteItem = (req, res) => {
   const { itemId } = req.params;
-  console.log(itemId);
+  const userId = req.user._id;
+
   ClothingItem.findById(itemId)
     .orFail()
     .then((item) => {
-      if (!item.owner.equals(req.user._id)) {
+      const itemOwnerId = item.owner.toString();
+
+      if (itemOwnerId !== userId) {
         return res.status(FORBIDDEN_ERROR).send({ message: "You can't delete this item" });
       }
-      return item.deleteOne()
-      .then(() => res.status(REQUEST_SUCCESS).send({ data: item }));
+
+      return ClothingItem.findByIdAndDelete(itemId)
+        .then(() => res.send({ message: "Item deleted" }))
+        .catch((err) => {
+          console.error('Error ${err.name} with message ${err.message}');
+          if (err.name === 'CastError') {
+            return res.status(BAD_REQUEST_ERROR).send({ message: "Wrong ID Fool!" });
+          }
+
+          return res.status(INTERNAL_SERVER_ERROR).send({ message: "An error has occurred on the server" })
+        });
     })
-    .catch ((err) => {
-  console.error(err);
-  if (err.name === 'CastError') {
-    return res.status(BAD_REQUEST_ERROR).send({ message: "Wrong ID Fool!" });
-  }
-  if (err.name === 'DocumentNotFoundError') {
-    return res.status(NOT_FOUND_ERROR).send({ message: "That does not live here!" });
-  }
-  return res.status(INTERNAL_SERVER_ERROR).send({ message: "An error has occurred on the server" })
-})
-}
+    .catch((err) => {
+      console.error('Error ${err.name} with message ${err.message}');
+      if (err.name === 'DocumentNotFoundError') {
+        return res.status(NOT_FOUND_ERROR).send({ message: "That does not live here!" });
+      }
+      if (err.name === 'CastError') {
+        return res.status(BAD_REQUEST_ERROR).send({ message: "Wrong ID Fool!" });
+      }
+
+      return res.status(INTERNAL_SERVER_ERROR).send({ message: "An error has occurred on the server" })
+    });
+};
 
 const likeItem = (req, res) => {
-  console.log(req.user._id);
-  const userId = req.user._id;
-  const { itemId } = req.params;
-  ClothingItem.findByIdAndUpdate(itemId, { $addToSet: { likes: userId } }, { new: true },
+  ClothingItem.findByIdAndUpdate(
+    req.params.itemId,
+    { $addToSet: { likes: userId } },
+    { new: true }
   )
     .orFail()
-    .then((item) => res.send({ data: item }))
+    .then((item) => {
+      res.send({ data: item });
+    })
     .catch((err) => {
-      console.error(err);
+      console.error('Error ${err.name} with message ${err.message}');
+
       if (err.name === 'CastError') {
         return res.status(BAD_REQUEST_ERROR).send({ message: "Wrong ID Fool!" });
       }
@@ -78,15 +90,18 @@ const likeItem = (req, res) => {
 }
 
 const unlikeItem = (req, res) => {
-  console.log(req.user._id);
-  const userId = req.user._id;
-  const { itemId } = req.params;
-  ClothingItem.findByIdAndUpdate(itemId, { $pull: { likes: userId } }, { new: true },
+  ClothingItem.findByIdAndUpdate(
+    req.params.itemId,
+    { $pull: { likes: userId } },
+    { new: true },
   )
     .orFail()
-    .then((item) => res.send({ data: item }))
+    .then((item) => {
+      res.send({ data: item });
+    })
     .catch((err) => {
-      console.error(err);
+      console.error('Error ${err.name} with message ${err.message}');
+      
       if (err.name === 'CastError') {
         return res.status(BAD_REQUEST_ERROR).send({ message: "Wrong ID Fool!" });
       }
@@ -94,8 +109,8 @@ const unlikeItem = (req, res) => {
         return res.status(NOT_FOUND_ERROR).send({ message: "That does not live here!" });
       }
       return res.status(INTERNAL_SERVER_ERROR).send({ message: "An error has occurred on the server" });
-    })
-}
+    });
+};
 
 
 module.exports = { createItem, getItems, deleteItem, likeItem, unlikeItem };
