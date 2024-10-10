@@ -69,7 +69,7 @@ const deleteItem = (req, res) => {
 const likeItem = (req, res) => {
   ClothingItem.findByIdAndUpdate(
     req.params.itemId,
-    { $addToSet: { likes: userId } },
+    { $addToSet: { likes: user } },
     { new: true }
   )
     .orFail()
@@ -92,7 +92,7 @@ const likeItem = (req, res) => {
 const unlikeItem = (req, res) => {
   ClothingItem.findByIdAndUpdate(
     req.params.itemId,
-    { $pull: { likes: userId } },
+    { $pull: { likes: user } },
     { new: true },
   )
     .orFail()
@@ -101,7 +101,7 @@ const unlikeItem = (req, res) => {
     })
     .catch((err) => {
       console.error('Error ${err.name} with message ${err.message}');
-      
+
       if (err.name === 'CastError') {
         return res.status(BAD_REQUEST_ERROR).send({ message: "Wrong ID Fool!" });
       }
