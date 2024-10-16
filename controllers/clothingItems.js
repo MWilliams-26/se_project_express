@@ -69,7 +69,7 @@ const deleteItem = (req, res) => {
 const likeItem = (req, res) => {
   ClothingItem.findByIdAndUpdate(
     req.params.itemId,
-    { $addToSet: { likes: user } },
+    { $addToSet: { likes: req.user._id } },
     { new: true }
   )
     .orFail()
@@ -92,7 +92,7 @@ const likeItem = (req, res) => {
 const unlikeItem = (req, res) => {
   ClothingItem.findByIdAndUpdate(
     req.params.itemId,
-    { $pull: { likes: user } },
+    { $pull: { likes: req.user._id } },
     { new: true },
   )
     .orFail()
