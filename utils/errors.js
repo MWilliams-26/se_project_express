@@ -7,6 +7,16 @@ const CONFLICT_ERROR = 409;
 
 const INTERNAL_SERVER_ERROR = 500;
 
+const BadRequestError = 400;
+const UnauthorizedError = 401;
+const ForbiddenError = 403;
+const NotFoundError = 404;
+const ConflictError = 409;
+
+module.exports = {
+  BadRequestError, UnauthorizedError, ForbiddenError, NotFoundError, ConflictError
+}
+
 module.exports = {
   BAD_REQUEST_ERROR, NOT_FOUND_ERROR, INTERNAL_SERVER_ERROR, REQUEST_SUCCESS, UNAUTHORIZED_ERROR, FORBIDDEN_ERROR, CONFLICT_ERROR
 };
