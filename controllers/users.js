@@ -25,21 +25,35 @@ const createUser = (req, res) => {
     .then((hash) => User.create({ name, avatar, email, password: hash }))
     .then(() => res.status(201).send({ name, avatar, email }))
     .catch((err) => {
-      console.error(err);
-      if (err.code === 11000) {
-        return res
-          .status(CONFLICT_ERROR)
-          .send({ message: "Email already exists" });
+      if (err.name === 11000) {
+        return next(new ConflictError("Email already exists"));
       }
       if (err.name === "ValidationError") {
-        return res
-          .status(BAD_REQUEST_ERROR)
-          .send({ message: "Invalid data" });
+        return next(new BadRequestError("Invalid data"));
       }
-      return res
-        .status(INTERNAL_SERVER_ERROR)
-        .send({ message: "An error has occurred on the server" });
-    });
+      
+
+
+      else {
+        next(err);
+      }
+    })
+    // .catch((err) => {
+    //   console.error(err);
+    //   if (err.code === 11000) {
+    //     return res
+    //       .status(CONFLICT_ERROR)
+    //       .send({ message: "Email already exists" });
+    //   }
+    //   if (err.name === "ValidationError") {
+    //     return res
+    //       .status(BAD_REQUEST_ERROR)
+    //       .send({ message: "Invalid data" });
+    //   }
+    //   return res
+    //     .status(INTERNAL_SERVER_ERROR)
+    //     .send({ message: "An error has occurred on the server" });
+    // });
 }
 
 const getCurrentUser = (req, res) => {
