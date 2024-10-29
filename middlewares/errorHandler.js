@@ -6,7 +6,7 @@ const errorHandler = (err, req, res, next) => {
     .send({
       message: statusCode === 500
         ? 'An error occurred on the server'
-        : message
+        : message,
     });
 };
 
