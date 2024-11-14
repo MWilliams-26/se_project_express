@@ -74,11 +74,11 @@ const updateUser = (req, res, next) => {
     { name, avatar },
     { new: true, runValidators: true }
   )
-    .then(() => {
-      if (!updateUser) {
+    .then((user) => {
+      if (!user) {
         throw new NotFoundError("User not found");
       }
-      res.send(updateUser);
+      res.send(user);
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
