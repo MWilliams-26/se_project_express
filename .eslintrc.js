@@ -20,10 +20,9 @@ module.exports = {
     sourceType: "module",
   },
   rules: {
-    "no-console": ["warn", { allow: ["error"] }],
-    // "no-underscore-dangle": ["warn", { "allow": ["_id"] }],
-    "no-unused-vars": ["warn", { "caughtErrors": "all" }],
+    "no-underscore-dangle": ["warn", { "allow": ["_id"] }],
     "no-unused-vars": ["error", { "argsIgnorePattern": "next" }],
     "consistent-return": "off",
+    "no-console": "off",
   },
 };

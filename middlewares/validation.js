@@ -8,7 +8,7 @@ const validateUrl = (value, helpers) => {
   return helpers.error("string.uri");
 };
 
-const validateCreateItem = celebrate({
+module.exports.validateCreateItem = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30).messages({
       'string.empty': 'The "name" field must be filled in',
@@ -19,10 +19,11 @@ const validateCreateItem = celebrate({
       'string.empty': 'The "imageUrl" field must be filled in',
       'string.uri': 'the "imageUrl" field must be a valid url',
     }),
+    weather: Joi.string().required().valid("hot", "warm", "cold"),
   })
 })
 
-const validateCreateUser = celebrate({
+module.exports.validateCreateUser = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30).messages({
       'string.empty': 'The "name" field must be filled in',
@@ -43,7 +44,7 @@ const validateCreateUser = celebrate({
   })
 })
 
-const validateLogin = celebrate({
+module.exports.validateLogin = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email().messages({
       'string.empty': 'The "email" field must be filled in',
@@ -55,7 +56,7 @@ const validateLogin = celebrate({
   })
 })
 
-const validateId = celebrate({
+module.exports.validateId = celebrate({
   params: Joi.object().keys({
     itemId: Joi.string().required().hex().length(24).messages({
       'string.empty': 'The "itemId" field must be filled in',

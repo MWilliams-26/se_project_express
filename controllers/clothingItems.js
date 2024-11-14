@@ -2,7 +2,6 @@ const ClothingItem = require('../models/clothingItem');
 const BadRequestError = require('../utils/errors/BadRequestError');
 const NotFoundError = require('../utils/errors/NotFoundError');
 const ForbiddenError = require('../utils/errors/ForbiddenError');
-const { BAD_REQUEST_ERROR, INTERNAL_SERVER_ERROR, NOT_FOUND_ERROR, FORBIDDEN_ERROR, REQUEST_SUCCESS } = require('../utils/errors');
 
 // GET /clothingItems
 
@@ -45,7 +44,6 @@ const deleteItem = (req, res, next) => {
       return ClothingItem.findByIdAndDelete(itemId)
         .then(() => res.send({ message: "Item deleted" }))
         .catch((err) => {
-          console.error('Error ${err.name} with message ${err.message}');
           if (err.name === 'CastError') {
             next(new BadRequestError("Wrong ID Fool!"));
           } else {
@@ -54,7 +52,6 @@ const deleteItem = (req, res, next) => {
         });
     })
     .catch((err) => {
-      console.error('Error ${err.name} with message ${err.message}');
       if (err.name === 'DocumentNotFoundError') {
         next(new NotFoundError("Item not found"));
       }
@@ -77,8 +74,6 @@ const likeItem = (req, res, next) => {
       res.send({ data: item });
     })
     .catch((err) => {
-      console.error('Error ${err.name} with message ${err.message}');
-
       if (err.name === 'CastError') {
         next(new BadRequestError("Wrong ID Fool!"));
       }
@@ -101,8 +96,6 @@ const unlikeItem = (req, res, next) => {
       res.send({ data: item });
     })
     .catch((err) => {
-      console.error('Error ${err.name} with message ${err.message}');
-
       if (err.name === 'CastError') {
         next(new BadRequestError("Wrong ID Fool!"));
       }

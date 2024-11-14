@@ -14,7 +14,7 @@ const createUser = (req, res, next) => {
     .then((hash) => User.create({ name, avatar, email, password: hash }))
     .then(() => res.status(201).send({ name, avatar, email }))
     .catch((err) => {
-      if (err.name === 11000) {
+      if (err.code === 11000) {
         next(new ConflictError("Email already exists"));
       }
       if (err.name === "ValidationError") {
@@ -24,22 +24,6 @@ const createUser = (req, res, next) => {
         next(err);
       }
     })
-  // .catch((err) => {
-  //   console.error(err);
-  //   if (err.code === 11000) {
-  //     return res
-  //       .status(CONFLICT_ERROR)
-  //       .send({ message: "Email already exists" });
-  //   }
-  //   if (err.name === "ValidationError") {
-  //     return res
-  //       .status(BAD_REQUEST_ERROR)
-  //       .send({ message: "Invalid data" });
-  //   }
-  //   return res
-  //     .status(INTERNAL_SERVER_ERROR)
-  //     .send({ message: "An error has occurred on the server" });
-  // });
 }
 
 const getCurrentUser = (req, res, next) => {
@@ -90,7 +74,7 @@ const updateUser = (req, res, next) => {
     { name, avatar },
     { new: true, runValidators: true }
   )
-    .then((updateUser) => {
+    .then(() => {
       if (!updateUser) {
         throw new NotFoundError("User not found");
       }
